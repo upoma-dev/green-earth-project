@@ -684,9 +684,69 @@
     <div id="grid" class="grid" role="list"></div>
   </section>
 
+  <!-- Cart -->
+  <aside class="cart" aria-label="Shopping cart">
+    <h3>Your Cart</h3>
+    <div id="cartList" class="cart-list" aria-live="polite"></div>
+    <div class="total-row">
+      <div>Total</div>
+      <div id="cartTotal">৳0</div>
+    </div>
+  </aside>
+</main>
+
+<!-- About + Impact + Plant form -->
+<section class="about-impact">
+  <article id="about" class="about" aria-labelledby="aboutTitle">
+    <img src="./assets/about.png" alt="Young healthy green tree plant" />
+    <div>
+      <h2 id="aboutTitle">About the Campaign</h2>
+      <p>Green Earth is a global tree plantation initiative dedicated to fighting climate change. By joining our campaign you help restore forests, create habitats for wildlife, and support local communities.</p>
+      <ul>
+        <li>Restoration of natural habitats</li>
+        <li>Improvement of air quality</li>
+        <li>Support for local livelihoods</li>
+      </ul>
+    </div>
+  </article>
+
+  <div id="impact" class="impact-cards" aria-label="Impact statistics">
+    <div class="impact">
+      <strong id="impactTrees">500K+</strong>
+      <span>Trees Planted</span>
+    </div>
+    <div class="impact">
+      <strong id="impactCommunities">120+</strong>
+      <span>Communities Involved</span>
+    </div>
+    <div class="impact">
+      <strong id="impactCountries">30+</strong>
+      <span>Countries Reached</span>
+    </div>
+  </div>
+
+  <article id="plant" class="plant-section" aria-labelledby="plantTitle">
+    <h2 id="plantTitle" style="text-align:center;margin-top:0;">Plant a Tree Today</h2>
+    <form id="plantForm" class="plant-form" novalidate>
+      <input id="plant-name" name="name" type="text" placeholder="Your Name" required aria-required="true" />
+      <input id="plant-email" name="email" type="email" placeholder="Your Email" required aria-required="true" />
+      <select id="plant-amount" name="amount" required aria-required="true">
+        <option value="" disabled selected>Number of Trees</option>
+        <option value="1">1</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      <button type="submit">Donate Now</button>
+    </form>
+  </article>
+</section>
 
 
-  
+
+
 </body>
 
 </html>
