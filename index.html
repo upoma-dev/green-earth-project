@@ -1046,6 +1046,50 @@ function renderCart() {
 }
 
 
+   Plant form submission (simple validation)
+   =========================== */
+document.getElementById('plantForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('plant-name').value.trim();
+  const email = document.getElementById('plant-email').value.trim();
+  const amount = document.getElementById('plant-amount').value;
+  if (!name) { alert('Please enter your name.'); return; }
+  if (!validateEmail(email)) { alert('Please enter a valid email.'); return; }
+  if (!amount) { alert('Please select number of trees.'); return; }
+  alert(Thank you, ${name}! Your donation of ${amount} tree(s) is received. We will email you at ${email}.);
+  e.target.reset();
+});
+
+/* small utils */
+function validateEmail(email) { return /^\S+@\S+\.\S+$/.test(email); }
+function truncate(str, n){ return str.length > n ? str.slice(0,n-1) + '…' : str; }
+function escapeHtml(s) { return s.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+/* Accessibility announce for screen readers (polite) */
+const liveRegion = (() => {
+  const r = document.createElement('div');
+  r.setAttribute('aria-live','polite');
+  r.setAttribute('aria-atomic','true');
+  r.style.position='absolute'; r.style.left='-9999px';
+  document.body.appendChild(r);
+  return r;
+})();
+function announce(msg) { liveRegion.textContent = msg; }
+
+/* ===========================
+   Loading + Init
+   =========================== */
+function init() {
+  renderCategories();
+  loadTreesFor(activeCategory);
+  renderCart();
+}
+init();
+
+/* Small helper to announce UI actions for screen readers */
+document.addEventListener('click', (e) => { if (e.target.matches('.add-btn')) announce('Added to cart'); });
+
+</script>
 
 
 </body>
