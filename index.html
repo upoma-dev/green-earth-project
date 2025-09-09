@@ -616,6 +616,53 @@
 </head>
 
 <body>
+    <header>
+        <div class="nav-left">
+            <div class="logo" aria-hidden="true">Green Earth</div>
+        </div>
+
+        <nav aria-label="Main navigation">
+            <a href="#about">About</a>
+            <a href="#impact">Impact</a>
+            <a href="#plant">Plant a Tree</a>
+            <a href="#shop">Shop Trees</a>
+        </nav>
+
+        <div class="nav-right">
+            <button class="btn-primary" onclick="document.getElementById('plant-name')?.focus()">Plant a Tree</button>
+        </div>
+    </header>
+
+    <!-- Hero / Banner -->
+    <section class="hero" role="region" aria-label="Banner">
+        <div class="hero-inner">
+
+            <!-- Left image -->
+            <div class="hero-side hero-left" style="min-width:120px; text-align:center;">
+                <img src="./assets/hero-leaf1.png" alt="Leaf Left"
+                    style="width:220px; height:160px; object-fit:contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));" />
+            </div>
+
+            <!-- Center text -->
+            <div class="hero-text">
+                <h1>Plant a Tree, Grow a Future</h1>
+                <p>Together we plant trees, restore habitats and create cooler, greener cities for generations to come.
+                </p>
+                <div class="hero-btn">
+                    <button class="btn-primary"
+                        onclick="document.getElementById('plant').scrollIntoView({behavior:'smooth'})">Get
+                        Involved</button>
+                </div>
+            </div>
+
+            <!-- Right image -->
+            <div class="hero-side hero-right" style="min-width:260px; text-align:center;">
+                <img src="./assets/hero-leaf2.png" alt="Leaf Right"
+                    style="width:220px; height:160px; object-fit:contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));" />
+            </div>
+
+        </div>
+    </section>
 
 </body>
 
