@@ -949,6 +949,102 @@ function renderGrid(list) {
   });
 }
 
+/* ===========================
+   Modal detail view
+   =========================== */
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalImg = document.getElementById('modalImg');
+const modalTitle = document.getElementById('modalTitle');
+const modalCategory = document.getElementById('modalCategory');
+const modalDesc = document.getElementById('modalDesc');
+const modalPrice = document.getElementById('modalPrice');
+const modalAdd = document.getElementById('modalAdd');
+let modalOpenId = null;
+
+function openModal(id) {
+  const tree = treesData.find(t => t.id === id);
+  if (!tree) return;
+  modalOpenId = id;
+  modalImg.src = ./assets/${tree.image};
+  modalImg.alt = tree.name;
+  modalTitle.textContent = tree.name;
+  modalCategory.textContent = tree.category;
+  modalDesc.textContent = tree.description;
+  modalPrice.textContent = ৳${tree.price};
+  modalAdd.onclick = () => { addToCart(id); closeModal(); };
+  modalBackdrop.style.display = 'flex';
+  modalBackdrop.setAttribute('aria-hidden', 'false');
+  document.getElementById('modalClose').focus();
+}
+
+function closeModal() {
+  modalBackdrop.style.display = 'none';
+  modalBackdrop.setAttribute('aria-hidden', 'true');
+  modalOpenId = null;
+}
+
+/* modal close handlers */
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', (e) => {
+  if (e.target === modalBackdrop) closeModal();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOpenId) closeModal(); });
+
+/* ===========================
+   Cart functions
+   =========================== */
+function addToCart(id) {
+  const t = treesData.find(x => x.id === id);
+  if (!t) return;
+  const found = cart.find(i => i.id === id);
+  if (found) found.qty++;
+  else cart.push({ id: t.id, name: t.name, price: t.price, qty: 1 });
+  renderCart();
+  announce(${t.name} added to cart);
+}
+
+function removeFromCart(id) {
+  const idx = cart.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  cart.splice(idx, 1);
+  renderCart();
+}
+
+function renderCart() {
+  cartList.innerHTML = '';
+  if (!cart.length) {
+    cartList.innerHTML = <div class="empty">No trees added yet.</div>;
+    cartTotal.textContent = '৳0';
+    return;
+  }
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <div style="display:flex;flex-direction:column;">
+        <span class="name">${escapeHtml(item.name)}</span>
+        <span class="qty">Qty: ${item.qty} — ৳${item.price} each</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <div style="font-weight:800">৳${item.price * item.qty}</div>
+        <button class="remove" aria-label="Remove ${escapeHtml(item.name)}" data-id="${item.id}">✕</button>
+      </div>
+    `;
+    cartList.appendChild(div);
+  });
+  cartTotal.textContent = ৳${total};
+
+  cartList.querySelectorAll('.remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      removeFromCart(id);
+      announce('Item removed from cart');
+    });
+  });
+}
+
 
 
 
