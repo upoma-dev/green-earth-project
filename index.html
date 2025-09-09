@@ -768,6 +768,187 @@
 
 <script>
 
+/* ===========================
+   Data (trees) - update filenames as you add images in ./assets/
+   =========================== */
+const treesData = [
+  { id: 'mango', 
+  name: 'Mango Tree', 
+  category: 'Fruit Trees', 
+  description: 'A fast-growing tropical tree producing delicious mangoes. Loves full sun and warm climates.', 
+  price: 500, 
+  image: 'Mango.jpeg' },
+
+  { id: 'guava', 
+  name: 'Guava Tree', 
+  category: 'Fruit Trees', 
+  description: 'Produces sweet and tangy guavas, rich in vitamin C. Great for home gardens.', 
+  price: 450, 
+  image: 'guava.jpeg.jpg' },
+
+  { id: 'jacaranda', 
+  name: 'Jacaranda', 
+  category: 'Flowering Trees', 
+  description: 'Known for stunning purple flowers in spring; centerpiece for large yards.', 
+  price: 550, 
+  image: 'purple-flower.jpeg.jpg' },
+
+  { id: 'rose', 
+  name: 'Rose', 
+  category: 'Flowering Trees', 
+  description: 'Rose is a beautiful and fragrant plant with a variety of medicinal and substance uses.', 
+  price: 550, 
+  image: 'rose.jpeg.jpg' },
+
+  { id: 'Water Lily', 
+  name: 'Water Lily', 
+  category: 'Flowering Trees', 
+  description: 'An aquatic plant with beautiful flowers that float on water surfaces, adding charm to ponds and lakes.', 
+  price: 550, 
+  image: 'poddo.jpeg.jpg' },
+
+  { id: 'neem', 
+  name: 'Neem Tree', 
+  category: 'Medicinal Trees', 
+  description: 'A medicinal tree with many traditional uses; hardy and drought tolerant.', price: 420, 
+  image: 'Neem.jpeg.jpg' },
+
+  { id: 'teak', 
+  name: 'Teak Tree', 
+  category: 'Timber Trees', 
+  description: 'Valuable timber tree, slow-growing and used for durable furniture.', price: 1200, 
+  image: 'Tree-2.jpg' },
+
+  { id: 'bamboo', 
+  name: 'Bamboo', 
+  category: 'Bamboo', 
+  description: 'Fast-growing plant used for construction and sustainable projects.', price: 300, 
+  image: 'bamboo.jpeg.jpg' },
+
+  { id: 'magnolia', 
+  name: 'Magnolia', 
+  category: 'Ornamental Plants', 
+  description: 'Fragrant large flowers for ornamental planting.', 
+  price: 700, 
+  image: 'lilly.jpeg.jpg' },
+
+  { id: 'ficus', 
+  name: 'Ficus Benjamina', 
+  category: 'Evergreen Trees', 
+  description: 'An evergreen often used as ornamental with glossy leaves.', 
+  price: 650, 
+  image: 'Tree-1.jpg' },
+
+  { id: 'bougainvillea', 
+  name: 'Bougainvillea', 
+  category: 'Climbers', 
+  description: 'Colorful climber ideal for fencing and decoration.', 
+  price: 400, 
+  image: 'pink-tree.jpeg.jpg' }
+];
+
+/* ===========================
+   App State
+   =========================== */
+let cart = []; // array of {id, name, price, qty}
+let activeCategory = 'All Trees';
+const spinner = document.getElementById('spinner');
+const grid = document.getElementById('grid');
+const catList = document.getElementById('catList');
+const showingText = document.getElementById('showingText');
+const cartList = document.getElementById('cartList');
+const cartTotal = document.getElementById('cartTotal');
+
+/* Helper: show spinner while a fake load happens */
+function showSpinner(show = true) {
+  spinner.setAttribute('aria-hidden', show ? 'false' : 'true');
+  if (show) spinner.classList.add('show'); else spinner.classList.remove('show');
+}
+
+/* ===========================
+   Categories dynamic load
+   =========================== */
+function getCategories() {
+  const cats = new Set(treesData.map(t => t.category));
+  return ['All Trees', ...Array.from(cats)];
+}
+
+function renderCategories() {
+  catList.innerHTML = '';
+  const categories = getCategories();
+  categories.forEach((c, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.textContent = c;
+    btn.dataset.category = c;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-pressed', c === activeCategory ? 'true' : 'false');
+    if (c === activeCategory) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      if (activeCategory === c) return;
+      activeCategory = c;
+      document.querySelectorAll('.cat-btn').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
+      loadTreesFor(activeCategory);
+    });
+    catList.appendChild(btn);
+  });
+}
+
+/* ===========================
+   Load + Render Trees
+   =========================== */
+function loadTreesFor(category) {
+  // show spinner to simulate fetching
+  showSpinner(true);
+  showingText.textContent = Showing: ${category};
+  grid.innerHTML = ''; // clear while loading
+  // simulate async load
+  setTimeout(() => {
+    const filtered = category === 'All Trees' ? treesData : treesData.filter(t => t.category === category);
+    renderGrid(filtered);
+    showSpinner(false);
+  }, 600); // 600ms simulated load
+}
+
+function renderGrid(list) {
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = '<p class="empty">No trees available in this category.</p>';
+    return;
+  }
+  list.forEach(tree => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.setAttribute('role','listitem');
+    // image fallback: if file missing, user can add matching filename; keep alt text
+    const imgSrc = ./assets/${tree.image};
+    card.innerHTML = `
+      <img src="${imgSrc}" alt="${tree.name}" loading="lazy" onerror="this.onerror=null;this.src='./assets/placeholder.jpg'">
+      <h3 class="title" tabindex="0" data-id="${tree.id}">${escapeHtml(tree.name)}</h3>
+      <p class="desc">${escapeHtml(truncate(tree.description, 120))}</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span class="cat-tag">${escapeHtml(tree.category)}</span>
+        <span class="price">৳${tree.price}</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="add-btn" data-id="${tree.id}">Add to Cart</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // add event listeners: add-to-cart and open modal on title
+  grid.querySelectorAll('.add-btn').forEach(b => {
+    b.addEventListener('click', () => addToCart(b.dataset.id));
+  });
+  grid.querySelectorAll('.title').forEach(t => {
+    t.addEventListener('click', () => openModal(t.dataset.id));
+    t.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openModal(t.dataset.id); });
+  });
+}
+
 
 
 
